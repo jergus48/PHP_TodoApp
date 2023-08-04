@@ -1,0 +1,31 @@
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.buttonwithicon {
+    width: 48px;
+    height: 48px;
+    background-image: url('./assets/house.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px 24px;
+    /* set the size of the icon */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+
+html,
+body {
+    background-color: #3da2c3;
+}
+
+.home-a {
+    text-decoration: none;
+}
