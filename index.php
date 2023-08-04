@@ -38,12 +38,12 @@ $user_data = check_login($con);
             <div class="card rounded-3">
                 <div class="card-body p-4">
 
-                    <h1 style="text-align: center; "><a href="/lists.php/" class="home-a">ToDoList</a> / <a
+                    <h3 style="text-align: center; "><a href="/lists.php/" class="home-a">ToDoList</a> / <a
                             class="home-a" href="/daily.php/">Daily
                             Tasks</a>
                             /
                             <a href="/logout.php/" class="home-a" style="color:red;">Logout</a>
-                        </h1>
+                        </h3>
 
                 </div>
             </div>
