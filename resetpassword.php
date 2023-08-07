@@ -2,47 +2,64 @@
 include("connection.php");
 include("functions.php");
 
+require 'PHP/src/PHPMailer.php';
+require 'PHP/src/SMTP.php';
+require 'PHP/src/Exception.php';
+
+require 'vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 session_start();
+
     
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $user_name = $_POST['user_name'];
+    $token = bin2hex(random_bytes(32));
+    $token_expiry = date('Y-m-d H:i:s', time() + 3600); // Expiry 1 hour from now
 
-    if (isset($_SESSION['user_id'])) {
-       
-        header("Location: /index.php/");
-        exit();}
-    
+    // Update the user's record in the database with the reset token and its expiry
+    $update_query = "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE user_name = ?";
+    $stmt = mysqli_prepare($con, $update_query);
+    mysqli_stmt_bind_param($stmt, "sss", $token, $token_expiry, $user_name);
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $user_name = $_POST['user_name'];
-        $password=  $_POST['password'];
-    
-    if (!empty($user_name) && !empty($password) && !is_numeric($user_name)){
-        $query = "SELECT user_id FROM users WHERE user_name = ? AND password = ?";
-        $stmt = mysqli_prepare($con, $query);
-        mysqli_stmt_bind_param($stmt, "ss", $user_name, $password);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_store_result($stmt);
+    if (mysqli_stmt_execute($stmt)) {
+        // Step 2: Send Reset Email
+        $reset_link = "http://localhost:8000/newpassword.php?token=$token";
+        $email_subject = "Password Reset";
+        $email_body = "Click the link below to reset your password:\n\n$reset_link";
 
-        // Check if a matching user was found
-        if (mysqli_stmt_num_rows($stmt) > 0) {
-            // Fetch the user ID
-            mysqli_stmt_bind_result($stmt, $user_id);
-            mysqli_stmt_fetch($stmt);
+        // Initialize PHPMailer
+        $mail = new PHPMailer();
+        $mail->isSMTP();
 
-            // Set the user_id in the session
-            $_SESSION['user_id'] = $user_id;
+        // Configure SMTP settings
+        $mail->Host = 'smtp.gmail.com';;  // Update with your SMTP server
+        $mail->SMTPAuth = true;
+        $mail->Username = 'blessedstore.sk@gmail.com'; // Update with your email
+        $mail->Password = 'nwcyhngarzrscbyq';   // Update with your email password
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
 
-            // Redirect to the home page or any other authenticated page
-            header("Location: home.php");
-            exit();
+        // Set email content
+        $mail->setFrom('blessedstore.sk@gmail.com', 'ToDoApp');
+        $mail->addAddress($user_name);  // To address
+        $mail->Subject = $email_subject;
+        $mail->Body = $email_body;
+
+        // Send the email
+        if ($mail->send()) {
+            echo 'Email sent successfully';
         } else {
-            echo '<script>alert("Invalid mail or password.");</script>';
+            echo "Error sending email: " . $mail->ErrorInfo;
         }
-
-       
-        mysqli_stmt_close($stmt);
+    } else {
+        echo "Error updating record: " . mysqli_error($con);
     }
+}
+
     
-    };
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +70,7 @@ session_start();
     <link rel="icon" type="image/png" href="assets/icon.png">
     <link rel="shortcut icon" href="assets/icon.png">
     <title>
-       Login | TodoApp
+       Reset Password | TodoApp
     </title>
     <link rel="stylesheet" type="text/css" href="/styles.css">
 
@@ -76,9 +93,9 @@ session_start();
                     <form method="post" class="card-body p-4" id="taskForm">
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="h2 mb-0">Login</span>
+                            <span class="h2 mb-0">Reset Password</span>
                            
-                            <a href="/signup.php/">Sign Up</a>
+                            
                         </div>
                         <p class="text-muted pb-2">
                             <!-- <?php echo date('d/m/Y • H:i'); ?> -->
@@ -89,17 +106,13 @@ session_start();
                                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                                 <input type="email" class="form-control" id="exampleInputEmail1"
                                     aria-describedby="emailHelp" name="user_name" placeholder="Your mail" required>
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                <div id="emailHelp" class="form-text">Reset link will be send to this mail
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" name="password"
-                                    placeholder="Password" required> <a href="/resetpassword.php/">Forgot your password?</a>
-                            </div>
+                            
 
-                            <button type="submit" class="btn btn-sm btn-primary" name="Login"
-                                value="Login">Submit</button>
+                            <button type="submit" class="btn btn-sm btn-primary" name="reset"
+                                value="reset">Submit</button>
                         </div>
 
 
