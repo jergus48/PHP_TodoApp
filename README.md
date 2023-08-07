@@ -4,7 +4,7 @@ Made by:
 - BootStrap 4
 
 Features:
-- sign up & login
+- sign up, login & reset password
 - add lists,tasks,daily tasks
 - daily refresh of daily tasks
 - completed tasks with date of creation and completion
