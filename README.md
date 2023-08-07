@@ -1,7 +1,7 @@
 # Todoapp with PHP 
 Made by:
 - PHP
--BootStrap 4
+- BootStrap 4
 
 Features:
 - sign up & login
