@@ -37,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Configure SMTP settings
         $mail->Host = 'smtp.gmail.com';;  // Update with your SMTP server
         $mail->SMTPAuth = true;
-        $mail->Username = 'blessedstore.sk@gmail.com'; // Update with your email
-        $mail->Password = 'nwcyhngarzrscbyq';   // Update with your email password
+        $mail->Username = '@gmail.com'; // Update with your email
+        $mail->Password = 'password';   // Update with your email password
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
         // Set email content
-        $mail->setFrom('blessedstore.sk@gmail.com', 'ToDoApp');
+        $mail->setFrom('@gmail.com', 'ToDoApp');
         $mail->addAddress($user_name);  // To address
         $mail->Subject = $email_subject;
         $mail->Body = $email_body;
