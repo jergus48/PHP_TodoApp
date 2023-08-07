@@ -18,7 +18,13 @@ Sign up:
 
 Login:
 
-![Snímka obrazovky 2023-08-04 143214](https://github.com/jergus48/PHP_TodoApp/assets/85837671/530d392b-c7fc-4787-b327-e52c1901607c)
+![login](https://github.com/jergus48/PHP_TodoApp/assets/85837671/6e4440bb-f4c4-4590-bd1f-2d639e84cb72)
+
+Reset Password
+
+![reset1](https://github.com/jergus48/PHP_TodoApp/assets/85837671/cf7fafec-1523-4058-9480-4d7501a171f8)
+
+![reset2](https://github.com/jergus48/PHP_TodoApp/assets/85837671/7fd0c05e-1048-441d-987d-e6a866192f3b)
 
 
 Home:
